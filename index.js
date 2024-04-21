@@ -25,7 +25,6 @@ const start = () => {
         {command: '/game', description: 'Узнай свою везучесть'},
     ])
 
-
     bot.on('message', async msg => {
         const text = msg.text;
         const chatId = msg.chat.id;
@@ -57,7 +56,6 @@ const start = () => {
         }
     })
 }
-
 
 start()
 
