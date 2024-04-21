@@ -52,7 +52,7 @@ const start = async () => {
             if (text === '/info') {
                 const user = await UserModel.findOne({chatId})
                 console.log(user)
-                return bot.sendMessage(chatId, `Всего правильных ответов ${user.right}, неправильных ${user.wrong}`)
+                return bot.sendMessage(chatId, `Всего правильных ответов ${user.dataValues.right}, неправильных ${user.dataValues.wrong}`)
             }
             return bot.sendMessage(chatId, 'Моя твоя не понимать такой команды не знат')
         } catch (e) {
@@ -64,21 +64,23 @@ const start = async () => {
     bot.on('callback_query', async msg => {
         const data= msg.data;
         const chatId = msg.message.chat.id;
-        const user = await UserModel.findOne({chatId})
         if (data === '/again') {
             return startgame(chatId)
         }
-
-        if (parseInt(data)===chats[chatId]) {
+        console.log(chatId)
+        const user = await UserModel.findOne({chatId})
+        if (data==chats[chatId]) {
+            console.log(user)
             user.right +=1
             await bot.sendMessage(chatId,`Ты выбрал цифру ${data} и угадал`, againOptions)
             await bot.sendAnimation(chatId, 'CAACAgIAAxkBAAEE39xmJMCR8byQkA_pIL7ibcFa_V6GlAAC2EMAAkgxeEj33E65Z4bVrTQE')
         } else {
             user.wrong +=1
+            console.log(user)
             await bot.sendMessage(chatId,`Не в этот раз`, againOptions)
             await bot.sendAnimation(chatId, 'CAACAgIAAxkBAAEE395mJMC_kqGEWJ1FOljpkpHeCSBd9gACn0sAArGDeUi3nbaAtWPbNTQE')
         }
-        await user.save();
+        await user.save()
     })
 }
 
